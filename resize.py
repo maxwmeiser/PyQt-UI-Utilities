@@ -53,8 +53,7 @@ class worker():
         self.wFactor = splitOutRes[0] / splitInRes[0]
         self.hFactor = splitOutRes[1] / splitInRes[1]
 
-        print(self.wFactor)
-        print(self.hFactor)
+    
         
         
 

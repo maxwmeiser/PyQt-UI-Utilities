@@ -1,4 +1,6 @@
-import sys
+from asyncio.windows_events import NULL
+from asyncore import write
+import sys, re
 
 #   command line args
 #   1) input UI file path
@@ -24,42 +26,96 @@ class worker():
         self.wFactor = 1
         self.hFactor = 1
         self.workStr = ""
+        self.regexPression = "\s*((<x>)|(<y>)|(<width>)|(<height>))\d*((<\/x>)|(<\/y>)|(<\/width>)|(<\/height>))"
 
     #this function isolates the width and height of the resolution input argument
     def getResolution(self, getSplit):
-        #find x to create substrings 
+        #find 'x' to create substrings 
         i = 0
         for x in getSplit:
             i += 1
             if x == 'x':
                 break
         
-        #no x, invalid resolution format 
+        #no 'x', invalid resolution format 
         if i == 0:
             print("[ERROR] Invalid resolution format! See readme for format")
             quit()
         
-        #return a touple (width,length)
+        #return a touple from input args(width,length)
         resoList = (int(getSplit[:i-1]),int(getSplit[i:]))
         return resoList
 
     #this function calculates the scale factors for resizing
     def getFactors(self):
-        #get inRes, outRes
+        #get inRes, outRes as touple
         splitInRes = self.getResolution(self.inRes)
         splitOutRes = self.getResolution(self.outRes)
 
         #divide both width and height to find scale factor
         self.wFactor = splitOutRes[0] / splitInRes[0]
         self.hFactor = splitOutRes[1] / splitInRes[1]
+        print(str(self.wFactor) + '<-- W factor | H factor -->' + str(self.hFactor))
 
-    
-        
-        
+    def readWrite(self):
+        #opens two files, readFile and writeFile
+        readFile = open(self.inPath, 'r')
+        writeFile = open(self.outPath, 'w')
+
+        #get lines from readFile. Returns a list with all lines within the file
+        readLines = readFile.readlines()
+        """
+        iterate through lines
+            Check every line against regex expression to determine if line of interest
+                If not line of interest
+                    write line as-is
+                else
+                    line into scale()
+                    write line from scale            
+        """
+        for line in readLines:
+            match = re.search(self.regexPression, line)
+            if match == None:
+                writeFile.write(line)
+            else:
+                newValue = int(self.scale(line))
+                line = re.sub('[0-9]+',str(newValue),line)
+                writeFile.write(line)
+                
+    def scale(self,line):
+        #get substring <x>123</x> 123. find first '>', second '<'
+        count = 0
+        #index of >, second < respectively
+        first = 0
+        second = 0
+
+        #iterate over line to find char of interest
+        for char in line:
+            if char == '>':
+                first = count
+            if char == '<' and first != 0:
+                second = count
+                break
+            count += 1
+
+        #get digit substring
+        substr = line[first+1:second]
+
+        #if width | x, scale with wFactor
+        #  else (height | y), scale with hFactor
+        if line[first-1:first] == ("h" or "x"):
+            return int(substr) * self.wFactor
+        else:
+            return int(substr) * self.hFactor
+
+    def primary(self):
+        self.getFactors()
+        self.readWrite()
 
         
 
 obj = worker(sys.argv)
-obj.getFactors()
+obj.primary()
+
             
         

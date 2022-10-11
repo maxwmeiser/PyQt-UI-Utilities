@@ -26,7 +26,7 @@ class worker():
         self.wFactor = 1
         self.hFactor = 1
         self.workStr = ""
-        self.regexPression = "\s*((<x>)|(<y>)|(<width>)|(<height>))\d*((<\/x>)|(<\/y>)|(<\/width>)|(<\/height>))"
+        self.regexPression = "\s*((<x>)|(<y>)|(<width>)|(<height>)|(<pointsize>))\d*((<\/x>)|(<\/y>)|(<\/width>)|(<\/height>)|(</pointsize>))"
 
     #this function isolates the width and height of the resolution input argument
     def getResolution(self, getSplit):

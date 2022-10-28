@@ -5,9 +5,7 @@ import sys, re, string
 
 #   command line args
 #   1) input UI file path
-#   2) input file resolution in the form <WIDTH>x<HEIGHT>
-#   3) output file desired resolution in the form <WIDTH>x<HEIGHT>
-#   4) output UI file path
+#   2) output UI file path
 #
 
 class worker():
@@ -21,8 +19,7 @@ class worker():
             print("[ERROR] Missing command line argument! See readme for format.")
             quit()
 
-       
-        #NO FONT SCALE:
+        #two cases of lines to be modified 
         self.regexPressionNormal = "\s*((<pixmap>)|(<normaloff>)|(<normalon>)|(<disabledoff>)|(<disabledon>)).*((<\/pixmap>)|(<\/normaloff>)|(<\/normalon>)|(<\/disabledoff>)|(<\/disabledon>))"
         self.regexPressionEndiconset = "\s*.*(<\/iconset>)"
 

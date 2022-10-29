@@ -98,17 +98,21 @@ class worker():
                         break
                 count += 1
             
-            #print("g1I: " + str(greaterOneIndex) + " | l1I: " + str(lessOneIndex) + " | g2I: " + str(greaterTwoIndex) + " | l2I: " + str(lessTwoIndex))
+            print("g1I: " + str(greaterOneIndex) + " | l1I: " + str(lessOneIndex) + " | g2I: " + str(greaterTwoIndex) + " | l2I: " + str(lessTwoIndex))
             #create two substrings, modify them, and replace original substrings with modded
             ss1 = line[greaterOneIndex+1:lessOneIndex]
             ss2 = line[greaterTwoIndex+1:lessTwoIndex]
 
-            mod1 = "../" + ss1
-            mod2 = "../" + ss2
-
-            line = line.replace(ss1, mod1)
-            line = line.replace(ss2, mod2)
-
+            #edge case where file path is the same
+            if ss1 == ss2: 
+                mod1 = "../" + ss1
+                line = line.replace(ss1, mod1)
+            else: 
+                mod1 = "../" + ss1
+                mod2 = "../" + ss2
+                line = line.replace(ss1, mod1)
+                line = line.replace(ss2, mod2)
+            
             return line
 
 

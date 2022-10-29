@@ -6,7 +6,8 @@ import sys, re, string
 #   command line args
 #   1) input UI file path
 #   2) output UI file path
-#
+#   
+#   To change what is added at the start of every file path, modify self.preAppend
 
 class worker():
     def __init__(self, argv):
@@ -22,6 +23,8 @@ class worker():
         #two cases of lines to be modified 
         self.regexPressionNormal = "\s*((<pixmap>)|(<normaloff>)|(<normalon>)|(<disabledoff>)|(<disabledon>)).*((<\/pixmap>)|(<\/normaloff>)|(<\/normalon>)|(<\/disabledoff>)|(<\/disabledon>))"
         self.regexPressionEndiconset = "\s*.*(<\/iconset>)"
+
+        self.preAppend = "../"
 
     def readWrite(self):
         #opens two files, readFile and writeFile
@@ -69,7 +72,7 @@ class worker():
             
             #create and modify substring based of indexes 
             substr = line[startIndex+1:endIndex]
-            modSubstr = "../" + substr
+            modSubstr = self.preAppend + substr
 
             return line.replace(substr, modSubstr)
 
@@ -105,11 +108,11 @@ class worker():
 
             #edge case where file path is the same
             if ss1 == ss2: 
-                mod1 = "../" + ss1
+                mod1 = self.preAppend + ss1
                 line = line.replace(ss1, mod1)
             else: 
-                mod1 = "../" + ss1
-                mod2 = "../" + ss2
+                mod1 = self.preAppend + ss1
+                mod2 = self.preAppend + ss2
                 line = line.replace(ss1, mod1)
                 line = line.replace(ss2, mod2)
             

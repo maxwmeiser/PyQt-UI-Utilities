@@ -8,6 +8,8 @@ import sys, re
 #   3) output file desired resolution in the form <WIDTH>x<HEIGHT>
 #   4) output UI file path
 #
+#   The program automatically calculates the scale factors of the width and height. 
+#   To enable font point size scaling, comment out the "NO FONT SCALE" regex expression and uncomment the "FONT SCALE" regex expression
 
 class worker():
     def __init__(self, argv):
@@ -26,7 +28,12 @@ class worker():
         self.wFactor = 1
         self.hFactor = 1
         self.workStr = ""
-        self.regexPression = "\s*((<x>)|(<y>)|(<width>)|(<height>)|(<pointsize>))\d*((<\/x>)|(<\/y>)|(<\/width>)|(<\/height>)|(</pointsize>))"
+        
+        #NO FONT SCALE:
+        self.regexPression = "\s*((<x>)|(<y>)|(<width>)|(<height>))\d*((<\/x>)|(<\/y>)|(<\/width>)|(<\/height>))"
+        
+        #FONT SCALE:
+        #self.regexPression = "\s*((<x>)|(<y>)|(<width>)|(<height>)|(<pointsize>))\d*((<\/x>)|(<\/y>)|(<\/width>)|(<\/height>)|(</pointsize>))"
 
     #this function isolates the width and height of the resolution input argument
     def getResolution(self, getSplit):
